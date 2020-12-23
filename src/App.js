@@ -1,8 +1,13 @@
-import AddTodo from './Todo/AddTodo'
 import TodoList from './Todo/TodoList'
 import React, { useEffect } from 'react'
 import Context from './context'
 import Loader from './Loader'
+
+const AddTodo = React.lazy(() => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(import('./Todo/AddTodo'))
+  }, 3000)
+}))
 
 function App() {
   const [todos, setTodos] = React.useState([])
@@ -54,7 +59,9 @@ function App() {
       <div className='wrapper'>
         <h1>React tutorial</h1>
 
-        <AddTodo onCreate={ addTodo } />
+        <React.Suspense fallback={ <Loader /> }>
+          <AddTodo onCreate={ addTodo } />
+        </React.Suspense>
 
         {loading && <Loader />}
         {
